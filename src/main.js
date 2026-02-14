@@ -225,7 +225,7 @@
       panel.style.fontFamily = "Inter, system-ui, monospace";
 
       const header = document.createElement("div");
-      header.textContent = "Zombs.io logger";
+      header.textContent = "Unix Logger";
       header.style.padding = "8px 10px";
       header.style.fontWeight = "600";
       header.style.cursor = "move";
@@ -345,34 +345,36 @@ fetch("https://raw.githubusercontent.com/kitty92pm/jsuilib/main/unixuilib.js")
             ui.Destroy();
         }
 
-        const ui = UnixUI.New("Zombs.io logger").UsePreset(" ");
+        const ui = UnixUI.New("Unix logger").UsePreset("Dark");
         ui.ToggleKey("F");
 
         ui.Add("About")
             .Label("Function Logger for Zombs.io")
             .Label("Author: kitty92pm")
             .Label("GitHub: github.com/kitty92pm/jsuilib")
-            .TitledSeparator("what this does?")
-            .Label("This logger hooks into the game's functions and logs calls, arguments, and execution time.")
-            .Label("Use the controls to clear logs, pause logging, or resend function calls.")
-            .Label("The network info section allows you to disconnect/reconnect and copy connection details.")
-            .TitledSeparator("Changelogs")
-            .Title("v1.2 - Function logger")
-            .Label("Added game.world hooking option")
-            .Label("Added uninstall logger")
-            .Title("v1.1 - New feature")
-            .Label("Added Complete walk through")
-            .Title("v1.0 - Initial release")
-            .Label(" - Basic function hooking and logging")
-            .Label(" - UI with grouping, call details, and resend/copy options")
-            .Label(" - Network info panel with connection controls")
-            .Label(" - Deobfuscation tools for functions");
+            .Group("What this does?", g => {
+              g.Label("This logger hooks into the game's functions and logs calls, arguments, and execution time.")
+            g.Label("Use the controls to clear logs, pause logging, or resend function calls.")
+            g.Label("The network info section allows you to disconnect/reconnect and copy connection details.")
+            })
+            .Group("Changelogs", g => {
+              g.Title("v1.2 - Function logger")
+            g.Label("Added game.world hooking option")
+            g.Label("Added uninstall logger")
+            g.Title("v1.1 - New feature")
+            g.Label("Added Complete walk through")
+            g.Title("v1.0 - Initial release")
+            g.Label(" - Basic function hooking and logging")
+            g.Label(" - UI with grouping, call details, and resend/copy options")
+            g.Label(" - Network info panel with connection controls")
+            g.Label(" - Deobfuscation tools for functions");
+            })
 
         ui.Add("Network Info")
-            .CenterTitle("Connection Details")
-            .Label("IP: " + ip)
-            .Label("Port: " + port)
-            .Button("Overflow connection", () => {
+            .Group("Connection Details", g => {
+              g.Label("IP: " + ip)
+            g.Label("Port: " + port)
+            g.Button("Overflow connection", () => {
                 const net = game.network;
                 for (let i = 0; i < 100; i++) {
                     try {
@@ -381,32 +383,35 @@ fetch("https://raw.githubusercontent.com/kitty92pm/jsuilib/main/unixuilib.js")
                 }
                 UnixUI.Notify("Overflowed connection with 100 pings.", "success");
             })
-            .TitledSeparator("Connection Controls")
-            .Button("Disconnect", () => {
+            })
+            .Group("Connection Controls", g => {
+              g.Button("Disconnect", () => {
                 game.network.disconnect();
                 UnixUI.Notify("Disconnected from server.", "info");
             })
-            .Button("Reconnect", () => {
+            g.Button("Reconnect", () => {
                 game.network.reconnect();
                 UnixUI.Notify("Attempting to reconnect...", "info");
             })
-            .TitledSeparator("Copy Info")
-            .Button("Copy IP", () => {
+            })
+            .Group("Copy Info", g => {
+              g.Button("Copy IP", () => {
                 navigator.clipboard.writeText(ip).then(() => {
                     UnixUI.Notify("IP address copied to clipboard!", "success");
                 });
             })
-            .Button("Copy Port", () => {
+            g.Button("Copy Port", () => {
                 navigator.clipboard.writeText(port).then(() => {
                     UnixUI.Notify("Port number copied to clipboard!", "success");
                 });
             })
-            .TitledSeparator("Rpc - BETA/WIP")
-            .Button("List Rpc Calls", () => {
+            })
+            .Group("Rpc - BETA/WIP", g => {
+                g.Button("List Rpc Calls", () => {
                 const rpcs = Object.keys(game.network.rpcMap);
                 UnixUI.Notify("RPC Calls: " + rpcs.join(", "), "info");
                 })
-            .Button("Hook Rpc Calls", () => {
+            g.Button("Hook Rpc Calls", () => {
                 (function () {
     const net = game.network;
 
@@ -433,7 +438,7 @@ fetch("https://raw.githubusercontent.com/kitty92pm/jsuilib/main/unixuilib.js")
 })();
 
             })
-            .Button("Overload Rpc Call", () => {
+            g.Button("Overload Rpc Call", () => {
 
     const net = game.network;
 
@@ -476,10 +481,13 @@ fetch("https://raw.githubusercontent.com/kitty92pm/jsuilib/main/unixuilib.js")
 
     UnixUI.Notify("Overloaded RPC: " + rpc, "success");
 })
+            })
+            
 
 
             ui.Add("Deobfuscation")
-            .Button("Method 1 Deobfuscate Clipboard Function", async () => {
+            .Group("Deob", g => {
+              g.Button("Method 1 Deobfuscate Clipboard Function", async () => {
             try {
             const text = await navigator.clipboard.readText();
             let deobfuscated = text;
@@ -516,7 +524,7 @@ fetch("https://raw.githubusercontent.com/kitty92pm/jsuilib/main/unixuilib.js")
     })
 
 
-    .Button("Method 2 Deobfuscate Clipboard Function", async () => {
+    g.Button("Method 2 Deobfuscate Clipboard Function", async () => {
     try {
         const code = await navigator.clipboard.readText();
         let deobfuscated = code;
@@ -585,50 +593,59 @@ fetch("https://raw.githubusercontent.com/kitty92pm/jsuilib/main/unixuilib.js")
         UnixUI.Notify("Failed to deobfuscate. Make sure page is focused and code is valid.", "error");
     }
 })
-
+            })
+            
 
         ui.Add("Function Logger")
-            .Button("Attach to game", () => {
+        .Group("Logger Controls", g => {
+          g.Button("Attach to game", () => {
               if (!FunctionLogger._paused) { 
                     FunctionLogger._paused = false;
               }
                 FunctionLogger.install(game, "game");
                 UnixUI.Notify("Function Logger attached to game object.", "success");
             })
-            .Button("Attach to network", () => {
+            g.Button("Attach to network", () => {
               if (!FunctionLogger._paused) { 
                     FunctionLogger._paused = false;
               }
                 FunctionLogger.install(game.network, "game.network");
                 UnixUI.Notify("Function Logger attached to game.network object.", "success");
             })
-            .Button("Attach to world", () => {
+            g.Button("Attach to world", () => {
               if (!FunctionLogger._paused) { 
                     FunctionLogger._paused = false;
               }
                 FunctionLogger.install(game.world, "game.world");
                 UnixUI.Notify("Function Logger attached to game.world object.", "success");
             })
-            .Button("Uninstall Logger", () => {
+            g.Separator()
+            g.Button("Uninstall Logger", () => {
               if (!FunctionLogger._paused) { 
                     FunctionLogger._paused = true;
               }
                 FunctionLogger.uninstall();
                 UnixUI.Notify("Function Logger uninstalled and original functions restored.", "success");
             });
+        })
 
         UnixUI.Notify("UnixUI v1.0 Loaded Successfully", "success");
 
         ui.Add("Settings")
-            .Label("F to toggle ui")
-            .Button("Destroy UI", () => {
+          .Group("UI", g => {
+            g.Label("F to toggle ui")
+            g.Color("Accent Color", "#ff44ff", v => ui.SetTheme({ accent: v }))
+            g.Button("Destroy UI", () => {
                 ui.Destroy()
                 unixLoaderLoaded = false;
                 UnixUI.Notify("UI unloaded. Refresh the page to load again.", "info");
             })
-            .Button("Finish walk through", () => {
+          })
+          .Group("Walkthrough", g => {
+            g.Button("Finish walk through", () => {
                 localStorage.setItem("walkthroughCompleted", "true");
             })
+          })
 
     })
     .catch(err => {
