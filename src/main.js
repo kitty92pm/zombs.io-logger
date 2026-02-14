@@ -335,7 +335,13 @@ fetch("https://raw.githubusercontent.com/kitty92pm/jsuilib/main/unixuilib.js")
             .TitledSeparator("what this does?")
             .Label("This logger hooks into the game's functions and logs calls, arguments, and execution time.")
             .Label("Use the controls to clear logs, pause logging, or resend function calls.")
-            .Label("The network info section allows you to disconnect/reconnect and copy connection details.");
+            .Label("The network info section allows you to disconnect/reconnect and copy connection details.")
+            .TitledSeparator("Changelogs")
+            .Title("v1.0 - Initial release")
+            .Label(" - Basic function hooking and logging")
+            .Label(" - UI with grouping, call details, and resend/copy options")
+            .Label(" - Network info panel with connection controls")
+            .Label(" - Deobfuscation tools for functions");
 
         ui.Add("Network Info")
             .CenterTitle("Connection Details")
