@@ -337,6 +337,8 @@ fetch("https://raw.githubusercontent.com/kitty92pm/jsuilib/main/unixuilib.js")
             .Label("Use the controls to clear logs, pause logging, or resend function calls.")
             .Label("The network info section allows you to disconnect/reconnect and copy connection details.")
             .TitledSeparator("Changelogs")
+            .Title("v1.1 - New feature")
+            .Label("Added Complete walk through")
             .Title("v1.0 - Initial release")
             .Label(" - Basic function hooking and logging")
             .Label(" - UI with grouping, call details, and resend/copy options")
@@ -580,7 +582,10 @@ fetch("https://raw.githubusercontent.com/kitty92pm/jsuilib/main/unixuilib.js")
                 ui.Destroy()
                 unixLoaderLoaded = false;
                 UnixUI.Notify("UI unloaded. Refresh the page to load again.", "info");
-            });
+            })
+            .Button("Finish walk through", () => {
+                localStorage.setItem("walkthroughCompleted", "true");
+            })
 
     })
     .catch(err => {
