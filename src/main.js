@@ -569,10 +569,12 @@ fetch("https://raw.githubusercontent.com/kitty92pm/jsuilib/main/unixuilib.js")
         UnixUI.Notify("UnixUI v1.0 Loaded Successfully", "success");
 
         ui.Add("Settings")
+            .Label("F to toggle ui")
             .Button("Destroy UI", () => {
-                UnixUI.Destroy();
+                ui.Destroy()
                 UnixUI.Notify("UI unloaded. Refresh the page to load again.", "info");
             });
+
     })
     .catch(err => {
         console.error("Failed to load UnixUI:", err);
@@ -582,6 +584,7 @@ fetch("https://raw.githubusercontent.com/kitty92pm/jsuilib/main/unixuilib.js")
     setInterval(() => {
         if (!game.network.connected) { 
             UnixUI.Notify("Unloading due to disconnection...", "error");
+            unixLoaderLoaded = false;
             Unload();
         }
     }, 1000);
