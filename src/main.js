@@ -11,6 +11,25 @@
       this._logSystem("Attached to " + label);
     },
 
+    uninstall() { 
+        if (this._ui && this._ui.parentNode) {
+    this._ui.parentNode.removeChild(this._ui);
+    this._ui = null;
+    this._list = null;
+  }
+
+  for (const fn of this._wrapped) {
+  if (fn._original) {
+    const { host, key, fn: originalFn } = fn._original;
+    try { host[key] = originalFn; } catch {}
+  }
+}
+
+  this._wrapped.clear();
+  this._groups.clear();
+  this._paused = false;
+    },
+
     _scanObject(obj, path, depth = 0) {
       if (!obj || (typeof obj !== "object" && typeof obj !== "function")) return;
       if (depth > 4) return;
@@ -49,6 +68,7 @@
 
       const wrapped = function (...args) {
         const thisArg = this;
+        wrapped._original = { fn, host, key };
         const t0 = performance.now();
         let result, error;
 
@@ -337,6 +357,9 @@ fetch("https://raw.githubusercontent.com/kitty92pm/jsuilib/main/unixuilib.js")
             .Label("Use the controls to clear logs, pause logging, or resend function calls.")
             .Label("The network info section allows you to disconnect/reconnect and copy connection details.")
             .TitledSeparator("Changelogs")
+            .Title("v1.2 - Function logger")
+            .Label("Added game.world hooking option")
+            .Label("Added uninstall logger")
             .Title("v1.1 - New feature")
             .Label("Added Complete walk through")
             .Title("v1.0 - Initial release")
@@ -566,12 +589,32 @@ fetch("https://raw.githubusercontent.com/kitty92pm/jsuilib/main/unixuilib.js")
 
         ui.Add("Function Logger")
             .Button("Attach to game", () => {
+              if (!FunctionLogger._paused) { 
+                    FunctionLogger._paused = false;
+              }
                 FunctionLogger.install(game, "game");
                 UnixUI.Notify("Function Logger attached to game object.", "success");
             })
             .Button("Attach to network", () => {
+              if (!FunctionLogger._paused) { 
+                    FunctionLogger._paused = false;
+              }
                 FunctionLogger.install(game.network, "game.network");
                 UnixUI.Notify("Function Logger attached to game.network object.", "success");
+            })
+            .Button("Attach to world", () => {
+              if (!FunctionLogger._paused) { 
+                    FunctionLogger._paused = false;
+              }
+                FunctionLogger.install(game.world, "game.world");
+                UnixUI.Notify("Function Logger attached to game.world object.", "success");
+            })
+            .Button("Uninstall Logger", () => {
+              if (!FunctionLogger._paused) { 
+                    FunctionLogger._paused = true;
+              }
+                FunctionLogger.uninstall();
+                UnixUI.Notify("Function Logger uninstalled and original functions restored.", "success");
             });
 
         UnixUI.Notify("UnixUI v1.0 Loaded Successfully", "success");
