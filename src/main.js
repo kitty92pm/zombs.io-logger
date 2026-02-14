@@ -572,6 +572,7 @@ fetch("https://raw.githubusercontent.com/kitty92pm/jsuilib/main/unixuilib.js")
             .Label("F to toggle ui")
             .Button("Destroy UI", () => {
                 ui.Destroy()
+                unixLoaderLoaded = false;
                 UnixUI.Notify("UI unloaded. Refresh the page to load again.", "info");
             });
 
